@@ -91,7 +91,8 @@ fi
 if [ $FILESRESTORE = "YES" ]; then
 status_message "** Restore files from backup **"
 sudo chown -R svc-jenkins-p $WEBROOT/$DRUPALSITEDIR
-rsync -avrog --delete  $BACKUPPATH/files/ $WEBROOT/$DRUPALSITEDIR
+#rsync -avrog --delete  $BACKUPPATH/files/ $WEBROOT/$DRUPALSITEDIR
+tar -zxf $BACKUPPATH/$SITENAME.filesbackup.tar.gz -C $WEBROOT/$DRUPALSITEDIR
 sudo chown -R apache:apache $WEBROOT/$DRUPALSITEDIR
 fi
 
