@@ -27,7 +27,8 @@ log_message() {
   else
     LEVEL="$2";
   fi
-  logger --no-act -P $LEVEL -s $1 2>> $LOGFILE
+  TIMEDATE=`date`
+  echo [$TIMEDATE] [$LEVEL] $1 >> $LOGFILE
 }
 
 # Function to display current status in dimmed font
