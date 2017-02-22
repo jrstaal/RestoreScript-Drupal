@@ -4,7 +4,7 @@
 
 currentdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Define settings file
+# Define settings file 
 CONFIGFILE="$currentdir/settings.ini"
 NOW=$(date +"%Y-%m-%d_%H:%M:%S")
 # Read and parse config file
