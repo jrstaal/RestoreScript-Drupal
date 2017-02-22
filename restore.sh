@@ -77,20 +77,23 @@ if [ "$BACKUPUSER" ]; then
 fi
 
 # Drop database tables
+if [ $DATABASECLEAN = "YES" ]; then
 PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME
-
+fi
 
 # Restore database from backup
+if [ $DATABASERESTORE = "YES" ]; then
 status_message "** Restoring DatabaseBackup \"$DBNAME\" on \"$DBHOST\" **"
-
 gunzip < $BACKUPPATH/$SITENAME.sql.gz | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -d $DBNAME -h $DBHOST -U $DBUSER
-
+fi
 
 # Restore files from backup location
+if [ $FILESRESTORE = "YES" ]; then
 status_message "** Restore files from backup **"
-
 sudo chown -R svc-jenkins-p $WEBROOT/$DRUPALSITEDIR
-
 rsync -avrog --delete  $BACKUPPATH/files/ $WEBROOT/$DRUPALSITEDIR
-
 sudo chown -R apache:apache $WEBROOT/$DRUPALSITEDIR
+fi
+
+
+
