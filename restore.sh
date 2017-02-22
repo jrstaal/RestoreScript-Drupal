@@ -65,8 +65,6 @@ if [ ! -f "$LOGFILE" ]; then
   fi
 fi
 
-status_message "** Cleaning Database \"$DBNAME\" on \"$DBHOST\" **"
-
 # Check Backup user
 if [ "$BACKUPUSER" ]; then
   if  [ ! "$BACKUPUSER" = "$USER" ]; then
@@ -78,6 +76,7 @@ fi
 
 # Drop database tables
 if [ $DATABASECLEAN = "YES" ]; then
+status_message "** Cleaning Database \"$DBNAME\" on \"$DBHOST\" **"
 PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME
 fi
 
