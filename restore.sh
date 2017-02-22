@@ -6,7 +6,7 @@ currentdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Define settings file
 CONFIGFILE="$currentdir/settings.ini"
-DATE=$(date +"%Y-%m-%d_%H:%M:%S")
+NOW=$(date +"%Y-%m-%d_%H:%M:%S")
 # Read and parse config file
 eval $(sed '/:/!d;/^ *#/d;s/:/ /;' < "$CONFIGFILE" | while read -r key val
 do
