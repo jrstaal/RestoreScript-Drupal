@@ -84,10 +84,13 @@ status_message "** Cleaning Database \"$DBNAME\" on \"$DBHOST\" **"
 	fi
 fi
 
+BACKUPDIR=`ls -d $BACKUPPATH/*/ | tail -n -1`
+status_message "** Taking folder $BACKUPDIR **"
+
 # Restore database from backup
 if [ $DATABASERESTORE = "YES" ]; then
 status_message "** Restoring DatabaseBackup \"$DBNAME\" on \"$DBHOST\" **"
-	if ! gunzip < $BACKUPPATH/$SITENAME.sql.gz | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -d $DBNAME -h $DBHOST -U $DBUSER; then
+	if ! gunzip < $BACKUPPATH/$BACKUPDIR/$SITENAME.sql.gz | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -d $DBNAME -h $DBHOST -U $DBUSER; then
 	exit_error "Database restore failed, aborting!"
 	fi
 fi
@@ -98,7 +101,7 @@ status_message "** Restore files from backup **"
 	if ! sudo chown -R $RESTOREUSER $WEBROOT/$DRUPALSITEDIR; then
 	exit_error "Chown $RESTOREUSER $WEBROOT/$DRUPALSITEDIR failed, aborting!"
 	fi
-	if ! tar -zxf $BACKUPPATH/$SITENAME.filesbackup.tar.gz -C $WEBROOT/$DRUPALSITEDIR; then
+	if ! tar -zxf $BACKUPPATH/$BACKUPDIR/$SITENAME.filesbackup.tar.gz -C $WEBROOT/$DRUPALSITEDIR; then
 	exit_error "Files restore failed, aborting!"
 	fi
 	if ! sudo chown -R apache:apache $WEBROOT/$DRUPALSITEDIR; then
@@ -106,8 +109,8 @@ status_message "** Restore files from backup **"
 	fi
 fi
 
-BACKUPDIR=`ls -d $BACKUPPATH/*/ | tail -n -1`
-status_message "** $BACKUPDIR **"
+
+
 
 status_message "** Finished restoring the backup ;) **"
 
