@@ -37,6 +37,7 @@ status_message() {
   log_message "$1"
   echo -e "$1..."
 }
+status_message "** Starting restore **"
 
 # Function to show error message and exit
 exit_error() {
@@ -105,5 +106,8 @@ status_message "** Restore files from backup **"
 	fi
 fi
 
+BACKUPDIR=`ls -d $BACKUPPATH/*/ | tail -n -1`
+status_message "** $BACKUPDIR **"
 
+status_message "** Finished restoring the backup ;) **"
 
