@@ -78,22 +78,31 @@ fi
 # Drop database tables
 if [ $DATABASECLEAN = "YES" ]; then
 status_message "** Cleaning Database \"$DBNAME\" on \"$DBHOST\" **"
-PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME
+	if ! PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME; then
+	exit_error "Database clean failed, aborting!"
+	fi
 fi
 
 # Restore database from backup
 if [ $DATABASERESTORE = "YES" ]; then
 status_message "** Restoring DatabaseBackup \"$DBNAME\" on \"$DBHOST\" **"
-gunzip < $BACKUPPATH/$SITENAME.sql.gz | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -d $DBNAME -h $DBHOST -U $DBUSER
+	if ! gunzip < $BACKUPPATH/$SITENAME.sql.gz | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -d $DBNAME -h $DBHOST -U $DBUSER; then
+	exit_error "Database restore failed, aborting!"
+	fi
 fi
 
 # Restore files from backup location
 if [ $FILESRESTORE = "YES" ]; then
 status_message "** Restore files from backup **"
-sudo chown -R svc-jenkins-p $WEBROOT/$DRUPALSITEDIR
-#rsync -avrog --delete  $BACKUPPATH/files/ $WEBROOT/$DRUPALSITEDIR
-tar -zxf $BACKUPPATH/$SITENAME.filesbackup.tar.gz -C $WEBROOT/$DRUPALSITEDIR
-sudo chown -R apache:apache $WEBROOT/$DRUPALSITEDIR
+	if ! sudo chown -R $RESTOREUSER $WEBROOT/$DRUPALSITEDIR; then
+	exit_error "Chown $RESTOREUSER $WEBROOT/$DRUPALSITEDIR failed, aborting!"
+	fi
+	if ! tar -zxf $BACKUPPATH/$SITENAME.filesbackup.tar.gz -C $WEBROOT/$DRUPALSITEDIR; then
+	exit_error "Files restore failed, aborting!"
+	fi
+	if ! sudo chown -R apache:apache $WEBROOT/$DRUPALSITEDIR; then
+	exit_error "Chown apache:apache $WEBROOT/$DRUPALSITEDIR failed, aborting!"
+	fi
 fi
 
 
