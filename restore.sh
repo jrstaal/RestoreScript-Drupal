@@ -83,7 +83,8 @@ PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME -
 # Restore database from backup
 status_message "** Restoring DatabaseBackup \"$DBNAME\" on \"$DBHOST\" **"
 
-PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -d $DBNAME -h $DBHOST -U $DBUSER < $BACKUPPATH/$DBNAME.sql
+gunzip < $BACKUPPATH/$SITENAME.sql.gz | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -d $DBNAME -h $DBHOST -U $DBUSER
+
 
 # Restore files from backup location
 status_message "** Restore files from backup **"
