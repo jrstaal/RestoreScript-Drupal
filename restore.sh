@@ -79,7 +79,7 @@ fi
 # Drop database tables
 if [ $DATABASECLEAN = "YES" ]; then
 status_message "** Cleaning Database \"$DBNAME\" on \"$DBHOST\" **"
-	if ! PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -h $DBHOST -U $DBUSER $DBNAME; then
+	if ! PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -q -h $DBHOST -U $DBUSER $DBNAME -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -q -h $DBHOST -U $DBUSER $DBNAME; then
 	exit_error "Database clean failed, aborting!"
 	fi
 fi
@@ -90,7 +90,7 @@ status_message "** Taking folder $BACKUPDIR **"
 # Restore database from backup
 if [ $DATABASERESTORE = "YES" ]; then
 status_message "** Restoring DatabaseBackup \"$DBNAME\" on \"$DBHOST\" **"
-	if ! gunzip < $BACKUPDIR/$SITENAME.sql.gz | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -d $DBNAME -h $DBHOST -U $DBUSER; then
+	if ! gunzip < $BACKUPDIR/$SITENAME.sql.gz | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -q -d $DBNAME -h $DBHOST -U $DBUSER; then
 	exit_error "Database restore failed, aborting!"
 	fi
 fi
