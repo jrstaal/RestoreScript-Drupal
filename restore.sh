@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Backupscript
+# Restorescript
 
 currentdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Define settings file
 CONFIGFILE="$currentdir/settings.ini"
-TIJD=$(date +"%Y-%m-%d_%H:%M:%S")
+DATE=$(date +"%Y-%m-%d_%H:%M:%S")
 # Read and parse config file
 eval $(sed '/:/!d;/^ *#/d;s/:/ /;' < "$CONFIGFILE" | while read -r key val
 do
@@ -18,7 +18,7 @@ done
 )
 
 # Set full path to log
-LOGFILE="/var/log/drupal/dbbackup-$SITENAME.log"
+LOGFILE="/var/log/drupal/dbrestore-$SITENAME.log"
 
 # Function to log to file
 log_message() {
@@ -45,8 +45,8 @@ exit_error() {
   if [ ! -z "$2" ]; then
     echo -e "$2"
   fi
-  echo -e "$(tput setaf 1)Aborting Backup $(tput sgr0)"
-  log_message "Backup Failed" "ERROR"
+  echo -e "$(tput setaf 1)Aborting Restore $(tput sgr0)"
+  log_message "Restore Failed" "ERROR"
   echo
   exit 1
 }
@@ -56,8 +56,8 @@ if [ ! -f "$LOGFILE" ]; then
   # Fix access to logfile (sudo??)
   status_message "Trying to fix access to \"$LOGFILE\""
   touch $LOGFILE
-  if [ "$BACKUPUSER" ]; then
-   chown $BACKUPUSER $LOGFILE
+  if [ "$RESTOREUSER" ]; then
+   chown $RESTOREUSER $LOGFILE
   fi
   chmod 775 $LOGFILE
   if [ ! -f "$LOGFILE" ]; then
@@ -65,11 +65,11 @@ if [ ! -f "$LOGFILE" ]; then
   fi
 fi
 
-# Check Backup user
-if [ "$BACKUPUSER" ]; then
-  if  [ ! "$BACKUPUSER" = "$USER" ]; then
-    exit_error "Wrong user: $USER" "Deployscript must be run as user \"$BACKUPUSER\". Try: sudo su $BACKUPUSER ./backup.sh"
-    # sudo su $BACKUPUSER
+# Check Restore user
+if [ "$RESTOREUSER" ]; then
+  if  [ ! "$RESTOREUSER" = "$USER" ]; then
+    exit_error "Wrong user: $USER" "Deployscript must be run as user \"$RESTOREUSER\". Try: sudo su $RESTOREUSER ./restore.sh"
+    # sudo su $RESTOREUSER
     # echo
   fi
 fi
