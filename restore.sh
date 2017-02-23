@@ -79,7 +79,7 @@ fi
 # Drop Postgres database tables
 if [ $DRUPALVERSION = "7" ]; then
 	if [ $DATABASECLEAN = "YES" ]; then
-	status_message "** Cleaning Database \"$DBNAME\" on \"$DBHOST\" **"
+	status_message "** Cleaning Postgres Database \"$DBNAME\" on \"$DBHOST\" **"
 		if ! PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -q -h $DBHOST -U $DBUSER $DBNAME -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -q -h $DBHOST -U $DBUSER $DBNAME; then
 		exit_error "Database clean failed, aborting!"
 		fi
@@ -89,7 +89,7 @@ fi
 # Drop MySQL database tables
 if [ $DRUPALVERSION = "8" ]; then
 	if [ $DATABASECLEAN = "YES" ]; then
-	status_message "** Cleaning Database \"$DBNAME\" on \"$DBHOST\" **"
+	status_message "** Cleaning MySQL Database \"$DBNAME\" on \"$DBHOST\" **"
 		if ! mysql -h $DBHOST -u $DBUSER -p $DBPASSWORD -D $DBNAME -BNe "show tables" | awk '{print "set foreign_key_checks=0; drop table `" $1 "`;"}' | mysql -h $DBHOST -u $DBUSER -p $DBPASSWORD -D $DBNAME; then
 		exit_error "Database clean failed, aborting!"
 		fi
@@ -102,7 +102,7 @@ status_message "** Taking folder $BACKUPDIR **"
 # Restore Postgres database from backup
 if [ $DRUPALVERSION = "7" ]; then
 	if [ $DATABASERESTORE = "YES" ]; then
-	status_message "** Restoring DatabaseBackup \"$DBNAME\" on \"$DBHOST\" **"
+	status_message "** Restoring Postgres DatabaseBackup \"$DBNAME\" on \"$DBHOST\" **"
 		if ! gunzip < $BACKUPDIR/$SITENAME.sql.gz | PGPASSWORD="$DBPASSWORD" /usr/pgsql-9.3/bin/psql -q -d $DBNAME -h $DBHOST -U $DBUSER; then
 		exit_error "Database restore failed, aborting!"
 		fi
@@ -112,7 +112,7 @@ fi
 # Restore MySQL database from backup
 if [ $DRUPALVERSION = "8" ]; then
 	if [ $DATABASERESTORE = "YES" ]; then
-	status_message "** Restoring DatabaseBackup \"$DBNAME\" on \"$DBHOST\" **"
+	status_message "** Restoring MySQL DatabaseBackup \"$DBNAME\" on \"$DBHOST\" **"
 		if ! gunzip < $BACKUPDIR/$SITENAME.sql.gz | mysql -h $DBHOST -u $DBUSER -p $DBPASSWORD -D $DBNAME; then
 		exit_error "Database restore failed, aborting!"
 		fi
