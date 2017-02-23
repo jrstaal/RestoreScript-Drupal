@@ -90,7 +90,7 @@ fi
 if [ $DRUPALVERSION = "8" ]; then
 	if [ $DATABASECLEAN = "YES" ]; then
 	status_message "** Cleaning MySQL Database \"$DBNAME\" on \"$DBHOST\" **"
-		if ! mysql -h $DBHOST -u $DBUSER -p $DBPASSWORD -D $DBNAME -BNe "show tables" | awk '{print "set foreign_key_checks=0; drop table `" $1 "`;"}' | mysql -h $DBHOST -u $DBUSER -p $DBPASSWORD -D $DBNAME; then
+		if ! mysql -h $DBHOST -u $DBUSER -p$DBPASSWORD -D $DBNAME -BNe "show tables" | awk '{print "set foreign_key_checks=0; drop table `" $1 "`;"}' | mysql -h $DBHOST -u $DBUSER -p$DBPASSWORD -D $DBNAME; then
 		exit_error "Database clean failed, aborting!"
 		fi
 	fi
@@ -113,7 +113,7 @@ fi
 if [ $DRUPALVERSION = "8" ]; then
 	if [ $DATABASERESTORE = "YES" ]; then
 	status_message "** Restoring MySQL DatabaseBackup \"$DBNAME\" on \"$DBHOST\" **"
-		if ! gunzip < $BACKUPDIR/$SITENAME.sql.gz | mysql -h $DBHOST -u $DBUSER -p $DBPASSWORD -D $DBNAME; then
+		if ! gunzip < $BACKUPDIR/$SITENAME.sql.gz | mysql -h $DBHOST -u $DBUSER -p$DBPASSWORD -D $DBNAME; then
 		exit_error "Database restore failed, aborting!"
 		fi
 	fi
