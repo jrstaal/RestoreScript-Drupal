@@ -133,4 +133,4 @@ status_message "** Restore files from backup **"
 	fi
 fi
 
-status_message "** Finished restoring the backup ;) **"
+status_message "** Finished restoring the backup ;-) **"
