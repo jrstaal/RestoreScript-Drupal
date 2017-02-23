@@ -18,7 +18,7 @@ done
 )
 
 # Set full path to log
-LOGFILE="/var/log/drupal/dbrestore-$SITENAME.log"
+LOGFILE="/var/log/drupal/drupal-restore-$SITENAME.log"
 
 # Function to log to file
 log_message() {
