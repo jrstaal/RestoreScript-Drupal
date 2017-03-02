@@ -122,14 +122,8 @@ fi
 # Restore files from backup location
 if [ $FILESRESTORE = "YES" ]; then
 status_message "** Restore files from backup **"
-	if ! sudo chown -R $RESTOREUSER $WEBROOT/$DRUPALSITEDIR; then
-	exit_error "Chown $RESTOREUSER $WEBROOT/$DRUPALSITEDIR failed, aborting!"
-	fi
 	if ! tar -zxf $BACKUPDIR/$SITENAME.filesbackup.tar.gz -C $WEBROOT/$DRUPALSITEDIR; then
 	exit_error "Files restore failed, aborting!"
-	fi
-	if ! sudo chown -R apache:apache $WEBROOT/$DRUPALSITEDIR; then
-	exit_error "Chown apache:apache $WEBROOT/$DRUPALSITEDIR failed, aborting!"
 	fi
 fi
 
