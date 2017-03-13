@@ -127,6 +127,8 @@ status_message "** Restore files from backup **"
 	fi
 fi
 
+cd $WEBROOT
+
 # Restore file permissions
 if [ $FILESRESTORE = "YES" ]; then
 status_message "** Restoring file permissions **"
