@@ -127,4 +127,12 @@ status_message "** Restore files from backup **"
 	fi
 fi
 
+# Restore file permissions
+if [ $FILESRESTORE = "YES" ]; then
+status_message "** Restoring file permissions **"
+	if ! sudo chown -R $RESTOREUSER:apache $WEBROOT/$DRUPALSITEDIR; then
+	exit_error "Restoring file permissions failed, aborting!"
+	fi
+fi
+
 status_message "** Finished restoring the backup ;-) **"
