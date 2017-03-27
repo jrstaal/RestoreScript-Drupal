@@ -134,7 +134,6 @@ if [ $FILESRESTORE = "YES" ]; then
 status_message "** Restoring file permissions **"
 	if ! sudo chown -R $RESTOREUSER:apache $WEBROOT/$DRUPALSITEDIR; then
 	exit_error "Restoring file permissions failed, aborting!"
-	fi
 	if ! sudo chmod -R 770 $WEBROOT/$DRUPALSITEDIR | git stash;
 	exit_error "Restoring file permissions failed, aborting!"
 	fi
