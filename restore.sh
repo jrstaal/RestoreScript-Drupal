@@ -122,7 +122,7 @@ fi
 # Restore files from backup location
 if [ $FILESRESTORE = "YES" ]; then
 status_message "** Restore files from backup **"
-	if ! tar -zxf $BACKUPDIR/$SITENAME.filesbackup.tar.gz -C $WEBROOT/$DRUPALSITEDIR; then
+	if ! sudo chown -R $RESTOREUSER:apache $WEBROOT/$DRUPALSITEDIR | tar -zxf $BACKUPDIR/$SITENAME.filesbackup.tar.gz -C $WEBROOT/$DRUPALSITEDIR; then
 	exit_error "Files restore failed, aborting!"
 	fi
 fi
